@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  ddiu:
+    restart: always
+    image: dpjl/ddiu:master
+    environment:
+      - CRON=*/10 * * * *
+      - LIVEBOX_PWD=<your_livebox_password>
+      - DEDIBOX_API_KEY=<your_dedibox_api_key>
+      - DOMAIN_NAME=domain.tld
+      - SUB_DOMAIN_LIST="['sub_domain1', 'sub_domain2']"
+

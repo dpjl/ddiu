@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 import argparse
 import ast
 import json
 import os
 import sys
+from datetime import datetime
 
 import requests
 
@@ -44,6 +47,8 @@ def get_livebox_ip(arguments):
                'Content-Type': 'application/x-sah-ws-4-call+json'}
     try:
         r = session.post(LIVEBOX_URL, data=json.dumps(auth_data), headers=headers, timeout=DEFAULT_TIMEOUT)
+        if args.debug:
+            print(r.json())
     except BaseException:
         print("Cannot execute authentication request")
         return -1
@@ -110,14 +115,20 @@ def update_dns_with_ip(arguments, new_ip):
 
 
 if __name__ == "__main__":
+    print(f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}: check if IP changed")
     args = parse_args()
     if args.sub_domain_name is None:
         default_sdn_from_env = os.getenv("SUB_DOMAIN_LIST")
+        if args.debug:
+            print(f"SUB_DOMAIN_LIST = {default_sdn_from_env}")
         if default_sdn_from_env is not None:
-            args.sub_domain_name = ast.literal_eval(os.getenv("SUB_DOMAIN_LIST"))
+            try:
+                args.sub_domain_name = ast.literal_eval(os.getenv("SUB_DOMAIN_LIST"))
+            except Exception:
+                print(f"Cannot parse {default_sdn_from_env}")
         else:
             print("No sub domains in command line or env. Exiting.")
-        sys.exit(1)
+            sys.exit(1)
     if args.domain_name is None:
         print("No domain in command line or env. Exiting.")
         sys.exit(1)
