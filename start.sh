@@ -1,8 +1,13 @@
 #!/bin/sh
 
 echo "------------"
+echo " Execute ddiu a first time"
+echo "------------"
+/app/ddiu.py
+
+echo "------------"
 echo " Start cron "
-echo "----- ------"
+echo "------------"
 
 echo "Create crontab configuration"
 echo "CRON = $CRON"
