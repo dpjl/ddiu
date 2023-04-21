@@ -86,9 +86,9 @@ def dns_need_to_be_updated(arguments, new_ip):
     headers = {'Authorization': "Bearer " + arguments.online_key}
     r = requests.get(f"{ONLINE_URL}/domain/{domain_name}/zone", headers=headers, timeout=DEFAULT_TIMEOUT)
     for record_result in r.json():
-        if arguments.debug and record_result['name'] in arguments.sub_domain_name:
+        if arguments.debug and record_result['type'] == IP_KIND and record_result['name'] in arguments.sub_domain_name:
             print(record_result)
-        if record_result['name'] in arguments.sub_domain_name:
+        if record_result['type'] == IP_KIND and record_result['name'] in arguments.sub_domain_name:
             found_subdomains.append(record_result['name'])
             if record_result['data'] != new_ip:
                 result = True
